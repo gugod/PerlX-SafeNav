@@ -1,8 +1,35 @@
 package PerlX::SafeNav;
 use strict;
 use warnings;
-
 our $VERSION = '0.000';
+
+use Exporter 'import';
+
+our @EXPORT = ('$safenav', '$unsafenav');
+
+our $safenav = sub {
+    my $o = shift;
+    bless \$o, 'PerlX::SafeNav::Object';
+};
+
+our $unsafenav = sub {
+    ${ $_[0] }
+};
+
+package PerlX::SafeNav::Object;
+
+sub AUTOLOAD {
+    our $AUTOLOAD;
+    my $method = substr $AUTOLOAD, 2 + rindex($AUTOLOAD, '::');
+
+    my ($self, @args) = @_;
+
+    (defined $$self) ?
+        $$self -> $method(@args) -> $safenav :
+        $self;
+}
+
+sub DESTROY {}
 
 1;
 
