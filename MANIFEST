@@ -1,0 +1,10 @@
+Build.PL
+Changes
+LICENSE
+MANIFEST
+MANIFEST.SKIP
+META.json
+META.yml
+README
+dist.json
+lib/PerlX/SafeNav.pm
