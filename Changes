@@ -1,4 +1,7 @@
-Revision history for PerlX-SafeNav
+Revision history for perl distribution PerlX-SafeNav
 
-          - Initial release to an unsuspecting world
+0.001 2023-06-25
 
+   - The first release of PerlX-SafeNav
+   - Minimum implementation that supports a safnav chain of method calls, array fetches and hash fetches.
+   - Most likely very buggy.
