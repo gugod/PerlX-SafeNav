@@ -1,0 +1,13 @@
+{
+    "x_static_install": true,
+    "resources": {
+        "bugtracker": {
+            "web": "https://github.com/gugod/PerlX-SafeNav/issues"
+        },
+        "repository": {
+            "web": "https://github.com/gugod/PerlX-SafeNav",
+            "url": "https://github.com/gugod/PerlX-SafeNav.git",
+            "type": "git"
+        }
+    }
+}

@@ -9,19 +9,22 @@ SYNOPSIS
 
         use PerlX::SafeNav ('$safenav', '$unsafenav');
     
-        my $tire = $car -> $safenv
+        my $tire_age = $car -> $safenv
              -> wheels()
-             -> first()    # undef, if no wheels at all
-             -> tire()     # undef, if no tire on the wheel
-             -> remove()
+             -> [0]               # undef, if no wheels at all.
+             -> tire()            # undef, if no tire on the wheel.
+             -> {created_on}
+             -> delta_days($now)
              -> $unsafenav;
     
-        unlessd (defined $tier) {
+        unlessd (defined $tire_age) {
             # The car either have no wheels, or the first wheel has no tire.
             ...
         }
 
 DESCRIPTION
+
+ Background
 
     In many other languages, there is an operator (often ?.) doing "Safe
     navigation", or "Optional Chaining". The operator does a method-call
@@ -33,40 +36,53 @@ DESCRIPTION
     <https://github.com/Perl/PPCs/blob/main/ppcs/ppc0021-optional-chaining-operator.md>
 
     This module provides a mean of making chains of method call safe
-    regarding undef values. When encountering an undef in the middle of the
-    chain, instead of dying with a "Can't call method on undefined value"
-    method, the entier chain of calls is reduced to undef.
+    regarding undef values. When encountering an undef in the middle of a
+    call chain like $o->foo()->bar()->baz(), the program would die with a
+    message like this:
 
-    With PerlX::SaveNav module, we could wrap a chain of calls and make it
-    safe. Say, we want to do this:
+        Can't call method "bar" on an undefined value
 
-        $ret = $o->a()->b()->c();
+    With the help of this module, instead of making the program die, the
+    call chain is reduced to undef.
 
-    ... but theose methods a(), b(), c(), they all have some chances of
-    returning undef, perhaps as a way to signal the lack of data. Without
-    proper checking, this chain of calls may end up erroring with a message
-    like this:
+ Usage
 
-        Can't call method "b" on an undefined value
+    With this module, instead of using a different operator, we wrap a
+    chain of calls to make it safe with the imported $safenav and
+    $unsafenav. $safenav must be placed at the beginning, while $unsafenav
+    must be place at the end. The should be invoked as method calls, like
+    this:
 
-    Instead of rewriting this nice little call chain into several
-    statements and adding defined to check the return value after each
-    method calls, we could do this instead:
+        $obj-> $safenav
+            -> a()
+            -> {b}
+            -> [0]
+            -> c()
+            -> $unsafenav;
 
-        use PerlX::SafeNav ('$safenav', '$unsafenav');
-    
-        $ret = $o->$safenav->a()->b()->c()->$unsafenav;
+    Notice that it is possible to mix all three kinds method calls, hash
+    fetches, and array fetches together in the same chain. If any of the 4
+    sub-expresions returns undef, the entire chain upto $unsafenv would
+    also be evaluated to undef. (For this reason, you probably don't want
+    to concatenate more sub-expressions after $unsafenav.)
 
-    This way, when any of a(), b(), c() returns undef, the entire chain
-    also evaluates to undef.
+    Noticed that the imported symbols are both $-sigiled scalar variables,
+    this is purposely made so, so that they could be called as methods on
+    arbitrary scalar values.
 
-    Noticed that the imported symbols are both $-sigiled, this is purposely
-    made so, so that they could be called as methods on arbitrary objects.
-    While being unconventional in their look, the chance of having naming
-    conflicts with methods from $o should be very small.
+    It is mandatory to have both $safenav and $unsafenav together in the
+    same chain. Without $unsafenav, the original return value of the chain
+    would be forever wrapped inside the mechanism of PerlX::SafeNav.
 
-    However, be aware that $safenav and $unsafenav would be masked by
-    locally-defined variables with the same name.
+    While being unconventional in their look, one benifit is that the
+    chance of having naming conflicts with methods from $o should be very
+    small. However, be aware that $safenav and $unsafenav would be masked
+    by locally-defined variables with the same name.
+
+ Bugs
+
+    There are likely many unknown bugs, as the current test suite only
+    covers the minmum set of forms that are known to work.
 
 AUTHOR
 

@@ -31,6 +31,10 @@ requires:
   overload: '0'
   strict: '0'
   warnings: '0'
+resources:
+  bugtracker: https://github.com/gugod/PerlX-SafeNav/issues
+  repository: https://github.com/gugod/PerlX-SafeNav.git
 version: '0.001'
 x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
 x_spdx_expression: MIT
+x_static_install: '1'

@@ -11,7 +11,7 @@
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "PerlX-SafeNav",
    "prereqs" : {
@@ -57,7 +57,18 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/gugod/PerlX-SafeNav/issues"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/gugod/PerlX-SafeNav.git",
+         "web" : "https://github.com/gugod/PerlX-SafeNav"
+      }
+   },
    "version" : "0.001",
    "x_serialization_backend" : "JSON::PP version 4.16",
-   "x_spdx_expression" : "MIT"
+   "x_spdx_expression" : "MIT",
+   "x_static_install" : "1"
 }
