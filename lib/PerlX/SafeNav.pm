@@ -18,11 +18,17 @@ our $unsafenav = sub {
 
 package PerlX::SafeNav::Object;
 
-use overload '@{}' => sub {
-    my $self = shift;
-    tie my @a, 'PerlX::SafeNav::ArrayRef', $$self;
-    return \@a;
-};
+use overload
+    '@{}' => sub {
+        my $self = shift;
+        tie my @a, 'PerlX::SafeNav::ArrayRef', $$self;
+        return \@a;
+    },
+    '%{}' => sub {
+        my $self = shift;
+        tie my %h, 'PerlX::SafeNav::HashRef', $$self;
+        return \%h;
+    };
 
 sub AUTOLOAD {
     our $AUTOLOAD;
@@ -54,6 +60,20 @@ sub FETCH {
 sub FETCHSIZE {
     my ($self) = @_;
     @$$self
+}
+
+package PerlX::SafeNav::HashRef;
+use Tie::Hash;
+our @ISA = ('Tie::Hash');
+
+sub TIEHASH {
+    my ($class, $o) = @_;
+    bless \$o, $class;
+}
+
+sub FETCH {
+    my ($self, $k) = @_;
+    $$self->{$k} -> $safenav;
 }
 
 1;
