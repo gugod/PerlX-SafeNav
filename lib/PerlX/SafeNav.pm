@@ -150,9 +150,9 @@ sub-expresions returns C<undef>, the entire chain upto C<$unsafenv>
 would also be evaluated to C<undef>. (For this reason, you probably
 don't want to concatenate more sub-expressions after C<$unsafenav>.)
 
-Noticed that the imported symbols are both C<$>-sigiled scalar
-variables, this is purposely made so, so that they could be called as
-methods on arbitrary scalar values.
+This module provide 2 symbols are both C<$>-sigiled scalar variables,
+this is on purpose, so that they could be called as methods on
+arbitrary scalar values.
 
 It is mandatory to have both C<$safenav> and C<$unsafenav> together in
 the same chain. Without C<$unsafenav>, the original return value of
@@ -166,8 +166,8 @@ masked by locally-defined variables with the same name.
 
 =head2 Bugs
 
-There are likely many unknown bugs, as the current test suite only covers the minmum set of
-forms that are known to work.
+There are likely many unknown bugs, as the current test suite only
+covers the minmum set of forms that are known to work.
 
 
 =head1 AUTHOR
