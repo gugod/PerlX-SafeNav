@@ -1,0 +1,19 @@
+name: CI
+
+on: pull_request
+
+jobs:
+  yath:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        perl: [ '5.36', '5.34' ]
+    container:
+      image: perl:${{ matrix.perl }}
+    name: Perl ${{ matrix.perl }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: perl -V
+      - run: cpanm --quite --notest --installdeps .
+      - run: cpanm --quite --notest App::Yath
+      - run: yath test --qvf t/
