@@ -18,6 +18,13 @@ our $unsafenav = sub {
 
 package PerlX::SafeNav::Object;
 
+use overload '@{}' => sub {
+    my $self = shift;
+    my @a;
+    tie @a, 'PerlX::SafeNav::ArrayRef', $$self;
+    return \@a;
+};
+
 sub AUTOLOAD {
     our $AUTOLOAD;
     my $method = substr $AUTOLOAD, 2 + rindex($AUTOLOAD, '::');
@@ -30,6 +37,25 @@ sub AUTOLOAD {
 }
 
 sub DESTROY {}
+
+package PerlX::SafeNav::ArrayRef;
+use Tie::Array;
+our @ISA = ('Tie::Array');
+
+sub TIEARRAY {
+    my ($class, $o) = @_;
+    return bless \$o, $class;
+}
+
+sub FETCH {
+    my ($self, $i) = @_;
+    @$$self[$i] -> $safenav;
+}
+
+sub FETCHSIZE {
+    my ($self) = @_;
+    @$$self
+}
 
 1;
 
