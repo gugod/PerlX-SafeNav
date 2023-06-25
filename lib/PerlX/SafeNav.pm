@@ -102,7 +102,7 @@ Wrap a chain of method calls to make it resilient on encountering C<undef> value
          -> delta_days($now)
          -> $unsafenav;
 
-    unlessd (defined $tire_age) {
+    unless (defined $tire_age) {
         # The car either have no wheels, or the first wheel has no tire.
         ...
     }
