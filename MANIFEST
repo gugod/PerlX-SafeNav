@@ -8,3 +8,7 @@ META.yml
 README
 dist.json
 lib/PerlX/SafeNav.pm
+t/arrayref.t
+t/hashref.t
+t/mix.t
+t/synopsis.t
