@@ -20,8 +20,7 @@ package PerlX::SafeNav::Object;
 
 use overload '@{}' => sub {
     my $self = shift;
-    my @a;
-    tie @a, 'PerlX::SafeNav::ArrayRef', $$self;
+    tie my @a, 'PerlX::SafeNav::ArrayRef', $$self;
     return \@a;
 };
 
