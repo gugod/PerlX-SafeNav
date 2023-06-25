@@ -94,19 +94,22 @@ Wrap a chain of method calls to make it resilient on encountering C<undef> value
 
     use PerlX::SafeNav ('$safenav', '$unsafenav');
 
-    my $tire = $car -> $safenv
+    my $tire_age = $car -> $safenv
          -> wheels()
-         -> first()    # undef, if no wheels at all
-         -> tire()     # undef, if no tire on the wheel
-         -> remove()
+         -> [0]               # undef, if no wheels at all.
+         -> tire()            # undef, if no tire on the wheel.
+         -> {created_on}
+         -> delta_days($now)
          -> $unsafenav;
 
-    unlessd (defined $tier) {
+    unlessd (defined $tire_age) {
         # The car either have no wheels, or the first wheel has no tire.
         ...
     }
 
 =head1 DESCRIPTION
+
+=head2 Background
 
 In many other languages, there is an operator (often C<?.>) doing
 "Safe navigation", or "Optional Chaining".  The operator does a
@@ -118,39 +121,54 @@ For perl there is currently an PPC: L<Optional Chaining|https://github.com/Perl/
 
 This module provides a mean of making chains of method call safe
 regarding undef values. When encountering an C<undef> in the middle of
-the chain, instead of dying with a "Can't call method on undefined
-value" method, the entier chain of calls is reduced to C<undef>.
+a call chain like C<< $o->foo()->bar()->baz() >>, the program would die
+with a message like this:
 
-With C<PerlX::SaveNav> module, we could wrap a chain of calls and make
-it safe. Say, we want to do this:
+    Can't call method "bar" on an undefined value
 
-    $ret = $o->a()->b()->c();
+With the help of this module, instead of making the program die, the
+call chain is reduced to C<undef>.
 
-... but theose methods C<a()>, C<b()>, C<c()>, they all have some
-chances of returning C<undef>, perhaps as a way to signal the lack of
-data. Without proper checking, this chain of calls may end up
-erroring with a message like this:
+=head2 Usage
 
-    Can't call method "b" on an undefined value
+With this module, instead of using a different operator, we wrap a
+chain of calls to make it safe with the imported C<$safenav> and
+C<$unsafenav>. C<$safenav> must be placed at the beginning, while
+C<$unsafenav> must be place at the end. The should be invoked as
+method calls, like this:
 
-Instead of rewriting this nice little call chain into several
-statements and adding C<defined> to check the return value after each
-method calls, we could do this instead:
+    $obj-> $safenav
+        -> a()
+        -> {b}
+        -> [0]
+        -> c()
+        -> $unsafenav;
 
-    use PerlX::SafeNav ('$safenav', '$unsafenav');
+Notice that it is possible to mix all three kinds method calls, hash
+fetches, and array fetches together in the same chain. If any of the 4
+sub-expresions returns C<undef>, the entire chain upto C<$unsafenv>
+would also be evaluated to C<undef>. (For this reason, you probably
+don't want to concatenate more sub-expressions after C<$unsafenav>.)
 
-    $ret = $o->$safenav->a()->b()->c()->$unsafenav;
+Noticed that the imported symbols are both C<$>-sigiled scalar
+variables, this is purposely made so, so that they could be called as
+methods on arbitrary scalar values.
 
-This way, when any of C<a()>, C<b()>, C<c()> returns C<undef>, the
-entire chain also evaluates to C<undef>.
+It is mandatory to have both C<$safenav> and C<$unsafenav> together in
+the same chain. Without C<$unsafenav>, the original return value of
+the chain would be forever wrapped inside the mechanism of
+C<PerlX::SafeNav>.
 
-Noticed that the imported symbols are both C<$>-sigiled, this is
-purposely made so, so that they could be called as methods on
-arbitrary objects. While being unconventional in their look, the
-chance of having naming conflicts with methods from C<$o> should be very small.
+While being unconventional in their look, one benifit is that the
+chance of having naming conflicts with methods from C<$o> should be very
+small. However, be aware that C<$safenav> and C<$unsafenav> would be
+masked by locally-defined variables with the same name.
 
-However, be aware that C<$safenav> and C<$unsafenav> would be masked
-by locally-defined variables with the same name.
+=head2 Bugs
+
+There are likely many unknown bugs, as the current test suite only covers the minmum set of
+forms that are known to work.
+
 
 =head1 AUTHOR
 
