@@ -94,7 +94,7 @@ Wrap a chain of method calls to make it resilient on encountering C<undef> value
 
     use PerlX::SafeNav ('$safenav', '$unsafenav');
 
-    my $tire_age = $car -> $safenv
+    my $tire_age = $car -> $safenav
          -> wheels()
          -> [0]               # undef, if no wheels at all.
          -> tire()            # undef, if no tire on the wheel.
@@ -146,7 +146,7 @@ method calls, like this:
 
 Notice that it is possible to mix all three kinds method calls, hash
 fetches, and array fetches together in the same chain. If any of the 4
-sub-expresions returns C<undef>, the entire chain upto C<$unsafenv>
+sub-expresions returns C<undef>, the entire chain upto C<$unsafenav>
 would also be evaluated to C<undef>. (For this reason, you probably
 don't want to concatenate more sub-expressions after C<$unsafenav>.)
 
