@@ -36,15 +36,15 @@ safenav - Safe-navigation for Perl
 
 =head1 DESCRIPTION
 
-This C<safenav> pragma provides a helper methods for wrapping a chain of calls and make it safe from encountering C<undef> values in the way. If any of those sub-expresions yield C<undef>, instead of aborting the program with an error message, the entire chain yields C<undef> instead.
+This C<safenav> pragma provides helper methods for wrapping a chain of calls and make it safe from encountering C<undef> values in the way. If any of sub-expressions yield C<undef>, instead of aborting the program with an error message, the entire chain yields C<undef> instead.
 
 This pragma is part of L<PerlX::SafeNav>. It is just an alternative interface.
 
-Say we have this chain, in which each part right after ther C<<->>> operator may yields C<undef>:
+Say we have this chain, in which each part right after ther C<< -> >> operator may yield C<undef>:
 
     $o->a()->{b}->c()->[42]->d();
 
-To make a chain of calls safe from C<undef> values, we mark the beginning and the end with C<safenav::wrap()> and C<safenav::unwrap()>:
+To make it safe from C<undef> values, we mark the beginning and the end with C<safenav::wrap()> and C<safenav::unwrap()>:
 
     $o-> safenav::wrap() -> a()->{b}->c()->[42]->d() -> safenav::unwrap();
 
