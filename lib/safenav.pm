@@ -1,7 +1,10 @@
 package safenav;
 use strict;
 use warnings;
-use PerlX::SafeNav ('$safenav', '$unsafenav');
+use PerlX::SafeNav ('$safenav', '$unsafenav', '&safenav');
+
+use Exporter 'import';
+our @EXPORT = ('&safenav');
 
 *begin = *wrap = $safenav;
 *end = *unwrap = $unsafenav;

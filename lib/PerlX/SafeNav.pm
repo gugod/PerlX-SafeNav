@@ -6,6 +6,7 @@ our $VERSION = '0.002';
 use Exporter 'import';
 
 our @EXPORT = ('$safenav', '$unsafenav');
+our @EXPORT_OK = ('&safenav');
 
 our $safenav = sub {
     my $o = shift;
@@ -15,6 +16,12 @@ our $safenav = sub {
 our $unsafenav = sub {
     ${ $_[0] }
 };
+
+sub safenav (&@) {
+    my ($block, $o) = @_;
+    local $_ = $o->$safenav;
+    $block->()->$unsafenav;
+}
 
 package PerlX::SafeNav::Object;
 
