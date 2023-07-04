@@ -9,7 +9,7 @@ SYNOPSIS
 
         use PerlX::SafeNav ('$safenav', '$unsafenav');
     
-        my $tire_age = $car -> $safenv
+        my $tire_age = $car -> $safenav
              -> wheels()
              -> [0]               # undef, if no wheels at all.
              -> tire()            # undef, if no tire on the wheel.
@@ -17,7 +17,7 @@ SYNOPSIS
              -> delta_days($now)
              -> $unsafenav;
     
-        unlessd (defined $tire_age) {
+        unless (defined $tire_age) {
             # The car either have no wheels, or the first wheel has no tire.
             ...
         }
@@ -62,13 +62,13 @@ DESCRIPTION
 
     Notice that it is possible to mix all three kinds method calls, hash
     fetches, and array fetches together in the same chain. If any of the 4
-    sub-expresions returns undef, the entire chain upto $unsafenv would
+    sub-expresions returns undef, the entire chain upto $unsafenav would
     also be evaluated to undef. (For this reason, you probably don't want
     to concatenate more sub-expressions after $unsafenav.)
 
-    Noticed that the imported symbols are both $-sigiled scalar variables,
-    this is purposely made so, so that they could be called as methods on
-    arbitrary scalar values.
+    This module provide 2 symbols are both $-sigiled scalar variables, this
+    is on purpose, so that they could be called as methods on arbitrary
+    scalar values.
 
     It is mandatory to have both $safenav and $unsafenav together in the
     same chain. Without $unsafenav, the original return value of the chain
