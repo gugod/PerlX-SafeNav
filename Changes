@@ -1,5 +1,7 @@
 Revision history for perl distribution PerlX-SafeNav
 
+   - Introduction of the `safenav` pragma, which provides an alternative interface.
+
 0.001     2023-06-25 21:58:11+0900
    - The first release of PerlX-SafeNav
    - Minimum implementation that supports a safnav chain of method calls, array fetches and hash fetches.
