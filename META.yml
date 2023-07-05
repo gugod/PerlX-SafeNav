@@ -17,7 +17,7 @@ name: PerlX-SafeNav
 provides:
   PerlX::SafeNav:
     file: lib/PerlX/SafeNav.pm
-    version: '0.002'
+    version: '0.003'
   PerlX::SafeNav::ArrayRef:
     file: lib/PerlX/SafeNav.pm
   PerlX::SafeNav::HashRef:
@@ -36,7 +36,7 @@ requires:
 resources:
   bugtracker: https://github.com/gugod/PerlX-SafeNav/issues
   repository: https://github.com/gugod/PerlX-SafeNav.git
-version: '0.002'
+version: '0.003'
 x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
 x_spdx_expression: MIT
 x_static_install: '1'

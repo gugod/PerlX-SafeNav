@@ -7,7 +7,11 @@ SYNOPSIS
     Wrap a chain of method calls to make it resilient on encountering undef
     values in the middle:
 
-        use PerlX::SafeNav ('$safenav', '$unsafenav');
+        use PerlX::SafeNav ('$safenav', '$unsafenav', 'safenav');
+    
+        my $answer = safenav {
+            $_->a()->{b}->c()->[42]->d()
+        } $o;
     
         my $tire_age = $car -> $safenav
              -> wheels()
@@ -45,7 +49,9 @@ DESCRIPTION
     With the help of this module, instead of making the program die, the
     call chain is reduced to undef.
 
- Usage
+ Usages
+
+  $safenav and $unsafenav
 
     With this module, instead of using a different operator, we wrap a
     chain of calls to make it safe with the imported $safenav and
@@ -78,6 +84,22 @@ DESCRIPTION
     chance of having naming conflicts with methods from $o should be very
     small. However, be aware that $safenav and $unsafenav would be masked
     by locally-defined variables with the same name.
+
+  safenav block
+
+    A block syntax is also provided by importing the safenav symbol
+    explicitly:
+
+        use PerlX::SafeNav ('safenav');
+    
+        my $answer = safenav {
+            $_ ->a()->{b}->[0]->c()
+        } $o;
+
+    Inside this safenav block, $_ is the safenav-wrapped version of $o, and
+    the chain is automaticly un-wrapped at the end. $answer contains the
+    return value of method c() if no undef values are encountered or
+    otherwise, an undef.
 
  Bugs
 
