@@ -6,6 +6,7 @@ our $VERSION = '0.002';
 use Exporter 'import';
 
 our @EXPORT = ('$safenav', '$unsafenav');
+our @EXPORT_OK = ('&safenav');
 
 our $safenav = sub {
     my $o = shift;
@@ -15,6 +16,12 @@ our $safenav = sub {
 our $unsafenav = sub {
     ${ $_[0] }
 };
+
+sub safenav (&@) {
+    my ($block, $o) = @_;
+    local $_ = $o->$safenav;
+    $block->()->$unsafenav;
+}
 
 package PerlX::SafeNav::Object;
 
@@ -92,7 +99,11 @@ PerlX::SafeNav - Safe-navigation for Perl
 
 Wrap a chain of method calls to make it resilient on encountering C<undef> values in the middle:
 
-    use PerlX::SafeNav ('$safenav', '$unsafenav');
+    use PerlX::SafeNav ('$safenav', '$unsafenav', 'safenav');
+
+    my $answer = safenav {
+        $_->a()->{b}->c()->[42]->d()
+    } $o;
 
     my $tire_age = $car -> $safenav
          -> wheels()
@@ -129,7 +140,9 @@ with a message like this:
 With the help of this module, instead of making the program die, the
 call chain is reduced to C<undef>.
 
-=head2 Usage
+=head2 Usages
+
+=head3 C<$safenav> and C<$unsafenav>
 
 With this module, instead of using a different operator, we wrap a
 chain of calls to make it safe with the imported C<$safenav> and
@@ -163,6 +176,18 @@ While being unconventional in their look, one benifit is that the
 chance of having naming conflicts with methods from C<$o> should be very
 small. However, be aware that C<$safenav> and C<$unsafenav> would be
 masked by locally-defined variables with the same name.
+
+=head3 safenav block
+
+A block syntax is also provided by importing the C<safenav> symbol explicitly:
+
+    use PerlX::SafeNav ('safenav');
+
+    my $answer = safenav {
+        $_ ->a()->{b}->[0]->c()
+    } $o;
+
+Inside this C<safenav> block, C<$_> is the safenav-wrapped version of C<$o>, and the chain is automaticly un-wrapped at the end. C<$answer> contains the return value of method C<c()> if no C<undef> values are encountered or otherwise, an C<undef>.
 
 =head2 Bugs
 

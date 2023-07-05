@@ -1,7 +1,10 @@
 package safenav;
 use strict;
 use warnings;
-use PerlX::SafeNav ('$safenav', '$unsafenav');
+use PerlX::SafeNav ('$safenav', '$unsafenav', '&safenav');
+
+use Exporter 'import';
+our @EXPORT = ('&safenav');
 
 *begin = *wrap = $safenav;
 *end = *unwrap = $unsafenav;
@@ -20,37 +23,46 @@ safenav - Safe-navigation for Perl
 
     use safenav;
 
-    my $tire_age = $car
-         -> safenav::wrap()
-         -> wheels()
-         -> [0]               # undef, if no wheels at all.
-         -> tire()            # undef, if no tire on the wheel.
-         -> {created_on}
-         -> delta_days($now)
-         -> safenav::unwrap();
+    my $obj = Foo->new;
+    my $ret;
 
-    unless (defined $tire_age) {
+    # block syntax
+    $ret = safenav { $_->x()->y()->z() } $obj;
+
+    # wrap + unwrap
+    $ret = $obj-> safenav::wrap() ->x()->y()->z() -> safenav::unwrap();
+
+    # begin + end
+    $ret = $obj-> safenav::begin() ->x()->y()->z() -> safenav::end();
+
+    unless (defined $ret) {
         # The car either have no wheels, or the first wheel has no tire.
         ...
     }
 
 =head1 DESCRIPTION
 
-This C<safenav> pragma provides helper methods for wrapping a chain of calls and make it safe from encountering C<undef> values in the way. If any of sub-expressions yield C<undef>, instead of aborting the program with an error message, the entire chain yields C<undef> instead.
+The C<safenav> pragma is part of L<PerlX::SafeNav>. It provides alternative interfaces for wrapping a chain of calls and make it safe from encountering C<undef> values in the way. If any of sub-expressions yield C<undef>, instead of aborting the program with an error message, the entire chain yields C<undef> instead.
 
-This pragma is part of L<PerlX::SafeNav>. It is just an alternative interface.
-
-Say we have this chain, in which each part right after ther C<< -> >> operator may yield C<undef>:
+Say we have this call chain on object C<$o>, and each sub-expression right next to the C<< -> >> operators may yield C<undef>:
 
     $o->a()->{b}->c()->[42]->d();
 
-To make it safe from C<undef> values, we mark the beginning and the end with C<safenav::wrap()> and C<safenav::unwrap()>:
+To make it safe from encountering C<undef> values, we wrap the chain with C<safenav::wrap()> and C<safenav::unwrap()>:
 
     $o-> safenav::wrap() -> a()->{b}->c()->[42]->d() -> safenav::unwrap();
 
-Or alternatively, with C<safenav::begin()> and C<safenav::end()>:
+... or with C<safenav::begin()> and C<safenav::end()>:
 
-    $o-> safenav::begin() -> a()->{b}->c()->[42]->d() -> safenav::end();
+    $o-> safenav::begin() -> a()->{b}->c()->[42]->d() -> safenav::end()
+
+... or, with a C<safenav { ... }> block:
+
+    safenav {
+        $_->a()->{b}->c()->[42]->d()
+    } $o;
+
+... in which, C<$_> is the safenav-wrapped version of C<$o>, and the chain is automaticly un-wrapped at the end.
 
 Whichever seems better for you.
 

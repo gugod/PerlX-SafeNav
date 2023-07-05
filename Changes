@@ -1,5 +1,7 @@
 Revision history for perl distribution PerlX-SafeNav
 
+   - Adds `safenav` block syntax.
+
 0.002     2023-07-05 01:00:58+0900
    - Introduction of the `safenav` pragma, which provides an alternative interface.
 
