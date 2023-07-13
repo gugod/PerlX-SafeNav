@@ -44,7 +44,7 @@
    "provides" : {
       "PerlX::SafeNav" : {
          "file" : "lib/PerlX/SafeNav.pm",
-         "version" : "0.003"
+         "version" : "0.004"
       },
       "PerlX::SafeNav::ArrayRef" : {
          "file" : "lib/PerlX/SafeNav.pm"
@@ -70,7 +70,7 @@
          "web" : "https://github.com/gugod/PerlX-SafeNav"
       }
    },
-   "version" : "0.003",
+   "version" : "0.004",
    "x_serialization_backend" : "JSON::PP version 4.16",
    "x_spdx_expression" : "MIT",
    "x_static_install" : "1"
