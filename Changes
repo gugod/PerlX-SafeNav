@@ -1,5 +1,7 @@
 Revision history for perl distribution PerlX-SafeNav
 
+   - support older versions of perls: https://github.com/gugod/PerlX-SafeNav/pull/4
+
 0.003     2023-07-05 09:12:29+0900
    - Adds `safenav` block syntax.
 
