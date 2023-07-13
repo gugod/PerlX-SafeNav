@@ -66,7 +66,7 @@ sub FETCH {
 
 sub FETCHSIZE {
     my ($self) = @_;
-    @$$self
+    (defined $$self) ? @$$self : 0
 }
 
 package PerlX::SafeNav::HashRef;
